@@ -37,8 +37,22 @@ struct ContentView: View {
                 }
                 
                 Picker(selection: self.$selected, label: Text("Jogo")) {
-                    ForEach(0 ..< self.label.count) {
-                        Text(self.label[$0])
+                    if #available(iOS 14.0, *) {
+                        ForEach(0 ..< self.label.count) {
+                            Text(self.label[$0])
+                        }
+                        .onChange(of: selected) { (value) in
+                            if value == 0 {
+                                self.numbersSena = self.addNumbers(total: 6, universe: 60)
+                            } else {
+                                self.numbersQuina = self.addNumbers(total: 5, universe: 50)
+                            }
+                        }
+                    } else {
+                        // Fallback on earlier versions
+                        ForEach(0 ..< self.label.count) {
+                            Text(self.label[$0])
+                        }
                     }
                 }
                 .pickerStyle(SegmentedPickerStyle())
